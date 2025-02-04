@@ -17,42 +17,34 @@ import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 
-
-
-@UseGuards(RoleGuard)
+@Roles([Role.Admin])
 @UseGuards(AuthGuard, RoleGuard)
 @Controller('/users')
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService
-
   ) {}
-  @Roles([Role.Admin])
   @Post()
   async create(@Body() user: CreateUserDTO): Promise<CreateUserDTO> {
     return this.userService.create(user);
   }
 
-  @Roles([Role.Admin])
   @Get()
   async getAllUsers() {
     return this.userService.getAll();
   }
 
-  @Roles([Role.Admin])
+  @Roles([Role.User])
   @Get(':id')
   async getOneUser(@Param('id') id: string) {
     return this.userService.getById(id);
   }
 
-  @Roles([Role.Admin])
   @Put(':id')
   update(@Body() userUpdate: UpdatePutUserDTO, @Param('id') id: string) {
     return this.userService.updateOne(id, userUpdate);
   }
-  
-  @Roles([Role.Admin])
+
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.userService.delete(id);
