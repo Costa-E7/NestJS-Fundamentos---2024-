@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Headers, UseGuards, Req } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthLoginDTO } from 'src/user/dto/auth-login.dto';
 import { AuthRegisterDTO } from 'src/user/dto/auth-register.dto';
 import { AuthResetDTO } from 'src/user/dto/auth-reset.dto';
@@ -36,7 +36,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Post('/me')
-  me(@User("id") user) {
-      return { me: 'ok', user};
+  me(@User('id') user) {
+    return { me: 'ok', user };
   }
 }
