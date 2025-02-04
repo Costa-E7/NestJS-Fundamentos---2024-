@@ -1,12 +1,6 @@
-import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
+import { IsJWT, IsStrongPassword } from 'class-validator';
 
-export class CreateUserDTO {
-  @IsString()
-  name: string;
-
-  @IsEmail()
-  email: string;
-
+export class AuthResetDTO {
   @IsStrongPassword(
     {
       minLength: 6,
@@ -19,4 +13,7 @@ export class CreateUserDTO {
     },
   )
   password: string;
+
+  @IsJWT()
+  token: string;
 }

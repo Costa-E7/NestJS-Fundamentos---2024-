@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDTO } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdatePutUserDto } from './dto/update-put-user.dto';
+import { UpdatePutUserDTO } from './dto/update-put-user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create({ email, name, password }: CreateUserDto): Promise<CreateUserDto> {
+  create({ email, name, password }: CreateUserDTO): Promise<User> {
     return this.prisma.user.create({
       data: {
         email,
@@ -17,17 +18,17 @@ export class UserService {
     });
   }
 
-  getAll(): Promise<CreateUserDto[]> {
+  getAll(): Promise<CreateUserDTO[]> {
     return this.prisma.user.findMany();
   }
 
-  getById(id: string): Promise<CreateUserDto> {
+  getById(id: string): Promise<CreateUserDTO> {
     return this.prisma.user.findUnique({
       where: { id },
     });
   }
 
-  updateOne(id: string, userUpdate: UpdatePutUserDto): Promise<CreateUserDto> {
+  updateOne(id: string, userUpdate: UpdatePutUserDTO): Promise<CreateUserDTO> {
     return this.prisma.user.update({
       where: { id },
       data: { ...userUpdate },
@@ -35,7 +36,7 @@ export class UserService {
   }
 
   async delete(id: string) {
-    const user: UpdatePutUserDto = await this.getById(id);
+    const user: UpdatePutUserDTO = await this.getById(id);
     if (!user)
       throw new NotFoundException(`Usuario com Id ${id} não encontrado`);
     return this.prisma.user.delete({
