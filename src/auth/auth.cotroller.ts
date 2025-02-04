@@ -5,6 +5,7 @@ import { AuthResetDTO } from 'src/user/dto/auth-reset.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { User } from 'src/decorator/user.decorator';
 
 @Controller('/auth')
 export class AuthController {
@@ -35,9 +36,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Post('/me')
-  me(@Req() req) {
-      return { me: 'ok', data: req.tokenPayLoad};
-          
-    // return this.authService.checkToken((token ?? '' ).split(' ')[1]);
+  me(@User("id") user) {
+      return { me: 'ok', user};
   }
 }
