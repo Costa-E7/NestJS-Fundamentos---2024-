@@ -3,17 +3,21 @@ import { CreateUserDTO } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdatePutUserDTO } from './dto/update-put-user.dto';
 import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt'
+
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  create({ email, name, password }: CreateUserDTO): Promise<User> {
+  async create({ email, name, password }: CreateUserDTO): Promise<User> {
+    const salt: string = await bcrypt.genSalt()
+    const passwordHash = await bcrypt.hash(password, salt)
     return this.prisma.user.create({
       data: {
         email,
         name,
-        password,
+        password: passwordHash
       },
     });
   }
@@ -28,7 +32,14 @@ export class UserService {
     });
   }
 
-  updateOne(id: string, userUpdate: UpdatePutUserDTO): Promise<CreateUserDTO> {
+  async update(id: string, userUpdate: UpdatePutUserDTO): Promise<CreateUserDTO> {
+    if (!await this.exist(id)) return
+
+    if (userUpdate.password) {
+      const salt: string = await bcrypt.genSalt()
+      const passwordHash = await bcrypt.hash(userUpdate.password, salt)
+      userUpdate.password = passwordHash
+    }
     return this.prisma.user.update({
       where: { id },
       data: { ...userUpdate },
@@ -42,5 +53,11 @@ export class UserService {
     return this.prisma.user.delete({
       where: { id },
     });
+  }
+
+
+  async exist(id: string): Promise<boolean> {
+    const user = await this.getById(id)
+    return Boolean(user)
   }
 }

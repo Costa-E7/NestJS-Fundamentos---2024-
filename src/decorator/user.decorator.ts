@@ -10,7 +10,7 @@ export const User = createParamDecorator(
     const { user } = request;
     if (user) {
       if (filter) return user[filter];
-      return user;
+      return user;  
     }
 
     throw new NotFoundException('Usuario não encontrado no request');

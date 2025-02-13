@@ -19,6 +19,7 @@ import { AuthService } from 'src/auth/auth.service';
 
 @Roles([Role.Admin])
 @UseGuards(AuthGuard, RoleGuard)
+@Roles([Role.Admin])
 @Controller('/users')
 export class UserController {
   constructor(
@@ -36,13 +37,13 @@ export class UserController {
 
   @Roles([Role.User])
   @Get(':id')
-  async getOneUser(@Param('id') id: string) {
+  async getOneUser(@Param('id') id: string): Promise<CreateUserDTO>  {
     return this.userService.getById(id);
   }
 
   @Put(':id')
   update(@Body() userUpdate: UpdatePutUserDTO, @Param('id') id: string) {
-    return this.userService.updateOne(id, userUpdate);
+    return this.userService.update(id, userUpdate);
   }
 
   @Delete(':id')
