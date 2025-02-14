@@ -8,7 +8,7 @@ import { AuthController } from './auth.cotroller';
 @Module({
   imports: [
     JwtModule.register({
-      secret: '2qxMpn0mqRnUq2c2W9TPdFLZR9lgRoxV',
+      secret: process.env.JWT_SECRET,
     }),
     forwardRef(() => UserModule),
     PrismaModule,
