@@ -15,15 +15,12 @@ import { Roles } from 'src/decorator/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { AuthService } from 'src/auth/auth.service';
 
 @UseGuards(AuthGuard, RoleGuard)
 @Roles([Role.Admin])
 @Controller('/users')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
   @Post()
   async create(@Body() user: CreateUserDTO): Promise<CreateUserDTO> {
     return this.userService.create(user);
@@ -36,7 +33,7 @@ export class UserController {
 
   @Roles([Role.User])
   @Get(':id')
-  async getOneUser(@Param('id') id: string): Promise<CreateUserDTO>  {
+  async getOneUser(@Param('id') id: string): Promise<CreateUserDTO> {
     return this.userService.getById(id);
   }
 
