@@ -4,6 +4,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.cotroller';
+import { FileService } from 'src/file/file.service';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { AuthController } from './auth.cotroller';
     PrismaModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, FileService],
   exports: [AuthService],
 })
 export class AuthModule {}

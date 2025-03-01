@@ -17,7 +17,6 @@ import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { AuthService } from 'src/auth/auth.service';
 
-@Roles([Role.Admin])
 @UseGuards(AuthGuard, RoleGuard)
 @Roles([Role.Admin])
 @Controller('/users')
