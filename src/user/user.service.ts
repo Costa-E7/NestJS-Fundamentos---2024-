@@ -34,7 +34,7 @@ export class UserService {
   async update(
     id: string,
     userUpdate: UpdatePutUserDTO,
-  ): Promise<CreateUserDTO> {
+  ): Promise<User> {
     if (!(await this.exist(id))) return;
 
     if (userUpdate.password) {
