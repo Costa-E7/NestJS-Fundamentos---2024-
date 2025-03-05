@@ -58,4 +58,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+
+## NODE VERSION 16
 ## Curso https://www.udemy.com/course/curso-nest-js

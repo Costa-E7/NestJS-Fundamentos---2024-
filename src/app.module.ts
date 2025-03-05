@@ -40,19 +40,15 @@ import { User } from './user/entity/user.entity';
         }),
         inject: [ConfigService],
       }),
-      TypeOrmModule.forRootAsync({
-        imports: [ConfigModule],
-        useFactory: (configService: ConfigService) => ({
-          type: 'mysql',
-          host: configService.get<string>('DB_HOST'),
-          port: Number(configService.get<number>('DB_PORT')),
-          username: configService.get<string>('DB_USERNAME'),
-          password: configService.get<string>('DB_PASSWORD'),
-          database: configService.get<string>('DB_DATABASE'),
-          entities: [User],
-          synchronize: configService.get<string>('NODE_ENV') === 'dev',
-        }),
-        inject: [ConfigService],
+      TypeOrmModule.forRoot({
+        type: 'mysql',
+        host: process.env.DB_HOST || 'localhost',
+        port: Number(process.env.DB_PORT) || 3306,
+        username: process.env.DB_USERNAME || 'root',
+        password: process.env.DB_PASSWORD || 'password',
+        database: process.env.DB_DATABASE || 'test',
+        entities: [User], // Ou use um glob pattern como 'dist/**/*.entity.js'
+        synchronize: process.env.NODE_ENV === 'dev',
       }),
     ],
 
