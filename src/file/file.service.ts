@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { writeFile } from 'fs/promises';
+import { User } from 'src/user/entity/user.entity';
 
 @Injectable()
 export class FileService {

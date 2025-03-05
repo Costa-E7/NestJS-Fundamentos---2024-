@@ -15,6 +15,7 @@ import { Roles } from 'src/decorator/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { RoleGuard } from 'src/guards/role.guard';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { User } from './entity/user.entity';
 
 @UseGuards(AuthGuard, RoleGuard)
 @Roles([Role.Admin])
@@ -22,7 +23,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Post()
-  async create(@Body() user: CreateUserDTO): Promise<CreateUserDTO> {
+  async create(@Body() user: CreateUserDTO): Promise<User> {
     return this.userService.create(user);
   }
 
@@ -33,17 +34,17 @@ export class UserController {
 
   @Roles([Role.User])
   @Get(':id')
-  async getOneUser(@Param('id') id: string): Promise<CreateUserDTO> {
+  async getOneUser(@Param('id') id: number): Promise<User> {
     return this.userService.getById(id);
   }
 
   @Put(':id')
-  update(@Body() userUpdate: UpdatePutUserDTO, @Param('id') id: string) {
+  update(@Body() userUpdate: UpdatePutUserDTO, @Param('id') id: number) {
     return this.userService.update(id, userUpdate);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id') id: number) {
     return this.userService.delete(id);
   }
 }

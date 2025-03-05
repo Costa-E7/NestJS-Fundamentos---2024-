@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  IsString,
-  IsStrongPassword,
-} from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsOptional, IsDateString, IsStrongPassword } from 'class-validator';
 import { Role } from 'src/enums/role.enum';
 
 export class CreateUserDTO {
@@ -29,5 +23,9 @@ export class CreateUserDTO {
 
   @IsOptional()
   @IsEnum(Role)
-  role: number;
+  role: '1' | '2';  // Se 'role' for do tipo string e tiver valores '1' ou '2'
+
+  @IsOptional()
+  @IsDateString()
+  birthAt?: string;  // Caso o campo birthAt seja opcional
 }

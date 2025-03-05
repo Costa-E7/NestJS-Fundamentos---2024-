@@ -21,6 +21,7 @@ import {
   FilesInterceptor,
 } from '@nestjs/platform-express';
 import { FileService } from 'src/file/file.service';
+import { CreateUserDTO } from 'src/user/dto/create-user.dto';
 
 @Controller('/auth')
 export class AuthController {
@@ -35,7 +36,7 @@ export class AuthController {
   }
 
   @Post('')
-  register(@Body() body: AuthRegisterDTO) {
+  register(@Body() body: CreateUserDTO) {
     return this.authService.register(body);
   }
 

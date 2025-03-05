@@ -4,8 +4,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthLoginDTO } from 'src/user/dto/auth-login.dto';
 import { AuthRegisterDTO } from 'src/user/dto/auth-register.dto';
 import { AuthResetDTO } from 'src/user/dto/auth-reset.dto';
@@ -13,12 +11,13 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { link } from 'fs';
+import { User } from 'src/user/entity/user.entity';
+import { CreateUserDTO } from 'src/user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtSerrvice: JwtService,
-    private readonly prisma: PrismaService,
     private readonly userService: UserService,
     private readonly mailer: MailerService
   ) { }
@@ -32,7 +31,7 @@ export class AuthService {
           email: user.email,
         },
         {
-          expiresIn: '7 days',
+          expiresIn: '60 days',
           subject: String(user.id),
           issuer: 'login',
           audience: 'users',
@@ -53,11 +52,7 @@ export class AuthService {
   }
 
   async login({ email, password }: AuthLoginDTO) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
+    const user = await this.userService.findFirst({email})
     if (!user) throw new UnauthorizedException('E-mail e/ou senha incorretos.');
 
     if (!(await bcrypt.compare(password, user.password))) {
@@ -66,11 +61,8 @@ export class AuthService {
     return this.createToken(user);
   }
   async forget({ email }: Partial<AuthLoginDTO>) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
+    const user = await this.userService.findFirst({email})
+   
     if (!user) throw new UnauthorizedException('E-mail  incorreto.');
     const token = this.jwtSerrvice.sign({
       id: user.id
@@ -109,8 +101,14 @@ export class AuthService {
     }
   }
 
-  async register(data: AuthRegisterDTO) {
-    const user = await this.userService.create(data);
+  async register({name, email, password, birthAt, role}: CreateUserDTO) {
+    const user = await this.userService.create({
+      name,
+      email,
+      password,
+      birthAt,
+      role  
+    });
     return this.createToken(user);
   }
 
